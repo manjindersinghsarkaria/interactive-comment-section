@@ -1,10 +1,11 @@
 import SlCard from "@shoelace-style/shoelace/dist/react/card/index.js";
-import SlIconButton from "@shoelace-style/shoelace/dist/react/icon-button/index.js";
 import SlAvatar from "@shoelace-style/shoelace/dist/react/avatar/index.js";
 import SlButton from "@shoelace-style/shoelace/dist/react/button/index.js";
 import SlIcon from "@shoelace-style/shoelace/dist/react/icon/index.js";
 import ComposeMessage from "./ComposeMessage";
+import ScoreButton from "./ScoreButton";
 import PropTypes from "prop-types";
+import { isMobile } from "react-device-detect";
 import { useState } from "react";
 
 function MessageCard(props) {
@@ -34,22 +35,19 @@ function MessageCard(props) {
       <SlCard
         className={
           props.isChildren
-            ? `w-10/12 border-l-2 border-r-0 border-gray-200 pl-10${
+            ? `w-10/12 border-l-2 border-r-0 border-gray-200 sm:pl-10 xs:pl-2${
                 props.isLast ? "" : " pb-4"
               }`
             : "w-10/12 rounded-xl shadow-lg mb-4"
         }
       >
-        <div className="grid grid-cols-12">
-          <div className="col-span-1 flex justify-between items-center flex-col rounded-lg bg-gray-100 w-8 max-h-[90px]">
-            <SlIconButton name="plus-lg" label="Settings"></SlIconButton>
-            <div className="font-medium text-blue-600">
-              {props.message.score}
-            </div>
-            <SlIconButton name="dash-lg" label="Settings"></SlIconButton>
-          </div>
-          <div className="col-span-11 ">
-            <div className="w-full flex justify-between">
+        <div className="sm:grid sm:grid-cols-12 xs:flex xs:flex-col xs:gap-2">
+          {!isMobile && (
+            <ScoreButton score={props.message.score}></ScoreButton>
+          )}
+
+          <div className="col-span-11 flex flex-row flex-wrap order-2">
+            <div className="sm:w-1/2 xs:w-full flex justify-between">
               <div className="flex flex-row gap-2 items-center">
                 <SlAvatar
                   style={{ "--size": "2rem" }}
@@ -68,46 +66,49 @@ function MessageCard(props) {
                   {props.message.createdAt}
                 </div>
               </div>
-
-              <div className="ml-auto ">
-                {props.isCurrentUser && (
-                  <>
-                    <SlButton
-                      variant="text"
-                      type="default"
-                      onClick={deleteComment}
-                    >
-                      <div className="text-error-normal flex items-center gap-1">
-                        <SlIcon name="trash"></SlIcon>
-                        Delete
-                      </div>
-                    </SlButton>
-                    <SlButton
-                      variant="text"
-                      type="default"
-                      disabled={showEditTextArea}
-                      onClick={onEditComment}
-                    >
-                      <div>
-                        <SlIcon name="pencil"></SlIcon> Edit
-                      </div>
-                    </SlButton>
-                  </>
-                )}
-                {!props.isCurrentUser && (
+            </div>
+            <div className="ml-auto sm:w-1/2 xs:w-full xs:order-3 sm:order-none flex sm:justify-end">
+              {isMobile && (
+                <ScoreButton score={props.message.score}></ScoreButton>
+              )}
+              {props.isCurrentUser && (
+                <>
                   <SlButton
                     variant="text"
                     type="default"
-                    disabled={showReplyTextarea}
-                    onClick={onReplyToComment}
+                    onClick={deleteComment}
                   >
-                    <div>
-                      <SlIcon name="reply"></SlIcon> Reply
+                    <div className="text-error-normal flex items-center gap-1">
+                      <SlIcon name="trash"></SlIcon>
+                      Delete
                     </div>
                   </SlButton>
-                )}
-              </div>
+                  <SlButton
+                    variant="text"
+                    type="default"
+                    disabled={showEditTextArea}
+                    onClick={onEditComment}
+                  >
+                    <div>
+                      <SlIcon name="pencil"></SlIcon> Edit
+                    </div>
+                  </SlButton>
+                </>
+              )}
+              {!props.isCurrentUser && (
+                <SlButton
+                  variant="text"
+                  type="default"
+                  disabled={showReplyTextarea}
+                  onClick={onReplyToComment}
+                >
+                  <div>
+                    <SlIcon name="reply"></SlIcon> Reply
+                  </div>
+                </SlButton>
+              )}
             </div>
+
             {!showEditTextArea && (
               <div className="text-left">
                 {props.isChildren && (

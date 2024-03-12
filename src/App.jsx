@@ -44,7 +44,7 @@ function DataFetchingComponent() {
           currentUser={query.data.currentUser}
         >
           {message.replies && message.replies.length > 0 && (
-            <div className="ml-10">
+            <div className="sm:ml-10 xs:ml-1">
               {message.replies.map((reply, index) => (
                 <MessageCard
                   key={index}

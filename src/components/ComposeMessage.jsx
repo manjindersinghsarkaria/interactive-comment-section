@@ -47,28 +47,37 @@ function ComposeMessage(props) {
             : {}
         }
       >
-        <div className="flex flex-row gap-5">
+        <div
+          className={`flex flex-row xs:flex-wrap sm:flex-nowrap gap-5 ${
+            props.composeType === "Edit" ? "sm:flex-col" : ""
+          }`}
+        >
           {props.composeType !== "Edit" && (
-            <SlAvatar
-              style={{ "--size": "2rem" }}
-              image={props.userImage}
-              label="User avatar"
-            ></SlAvatar>
+            <div className="xs:order-1 sm:order-1">
+              <SlAvatar
+                style={{ "--size": "2rem" }}
+                image={props.userImage}
+                label="User avatar"
+              ></SlAvatar>
+            </div>
           )}
 
-          <SlTextarea
-            value={message}
-            className={props.composeType === "Edit" ? "w-full" : "w-[90%]"}
-            onSlInput={handleChange}
-            placeholder="Add a comment..."
-          ></SlTextarea>
-          <SlButton
-            variant="primary"
-            disabled={message === ""}
-            onClick={sendMessage}
-          >
-            {buttonText}
-          </SlButton>
+          <div className="sm:order-2 w-full">
+            <SlTextarea
+              value={message}
+              onSlInput={handleChange}
+              placeholder="Add a comment..."
+            ></SlTextarea>
+          </div>
+          <div className="xs:order-2 sm:order-3 xs:ml-auto">
+            <SlButton
+              variant="primary"
+              disabled={message === ""}
+              onClick={sendMessage}
+            >
+              {buttonText}
+            </SlButton>
+          </div>
         </div>
       </SlCard>
     </>
